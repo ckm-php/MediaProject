@@ -10,6 +10,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Models\Admin;
+use App\Models\User;
+use App\Models\UserRoll;
+use App\Models\UserRollInfo;
 use App\Http\Requests\AdminRequest;
 use Auth;
 
@@ -51,6 +54,12 @@ class AdminAuthController extends Controller
         return view('auth.admin.login');
     }
 
+    public function index()
+    {
+        $details = User::latest()->paginate(5);
+        return view('auth.admin.index',compact('details'))
+        ->with('i',(request()->input('page',1)-1)*5);
+    }
     /**
      * Show the application loginprocess.
      *
@@ -72,7 +81,10 @@ class AdminAuthController extends Controller
             //dd($user);
             //return view('auth.admin.dashboard');
             // \Session::put('success','You are Login successfully!!');
-            return redirect()->route('dashboard');
+           // return redirect()->route('dashboard');
+           $details = User::latest()->paginate(5);
+        return view('auth.admin.index',compact('details'))
+        ->with('i',(request()->input('page',1)-1)*5);
             
         } else {
             return back()->with('error','your username and password are wrong.');

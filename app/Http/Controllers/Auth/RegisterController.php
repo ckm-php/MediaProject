@@ -5,8 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Models\UserRoll;
+use App\Models\UserRollInfo;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -53,7 +57,8 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'g-recaptcha-response' => 'recaptcha',
+            //'g-recaptcha-response' => 'recaptcha',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
     }
 
@@ -63,12 +68,54 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    // protected function create(array $data)
+    // {
+    //     // $name = $data->file('image')->getClientOriginalName();
+ 
+    //     // $path = $data->file('image')->store('public/images');
+    //     //dd($data);
+    //     $imageName = time().'.'.$request->image->extension();  
+    //     dd($imageName);
+    //     return User::create([
+    //         'name' => $data['name'],
+    //         'email' => $data['email'],
+    //         'password' => Hash::make($data['password']),
+    //     ]);
+    // }
+
+    public function register(Request $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+        
+        $userid = DB::table('users')->count();
+        $imgid= $userid+1 .'.'.$request->image->extension();
+        /* Store $imageName name in DATABASE from HERE */
+    //dd('a');
+
+    $useroll = UserRoll::all();
+    foreach($useroll as $rollid) {
+        UserRollInfo::create([
+            "user_id" =>$userid+1,
+            "uuid" => $userid+1,      
+            'roll_id' => $rollid['roll_id'],
+            'created_at' => now(), // this could be in model events / observers
+            'remarks' => 'testing123'
         ]);
+    }
+    //$created = Unit::insert($units);
+
+     User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'image'=>$imgid
+            ]);
+        $request->image->move(public_path('user_profiles'),$imgid);
+
+       
+
+
+        return view('home');
+            
+            
     }
 }

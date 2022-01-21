@@ -11,6 +11,20 @@ Route::middleware('web')->domain(env('ADMIN_URL'))->group(function () {
 Route::get('/admin',[AdminAuth::class,'getLogin']);
 Route::post('admin/login', [AdminAuth::class,'postLogin'])->name('adminLoginPost');
 
+//index page
+Route::get('/userlist',[Admin::class,'index'])->name('user.list');
+//insert case
+Route::get('/create',[Admin::class,'create'])->name('user.create');
+Route::post('/store',[Admin::class,'userAddSubmit'])->name('user.store');
+
+//
+//update case
+Route::get('admin/edit/{user}',[Admin::class,'edit'])->name('user.edit');
+Route::patch('admin/update/{user}',[Admin::class,'userUpdateSubmit'])->name('user.update');
+//
+//delet case
+Route::delete('/admin/{user}',[Admin::class,'destroy'])->name('user.destroy');
+
 //login view page
 Route::group(['prefix' => 'admin','middleware' => 'adminauth'], function () {	
 	// Admin Dashboard    

@@ -6,10 +6,21 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Register') }}</div>
-
+                @if ($message = Session::get('success'))
+                <div class="alert alert-success alert-block">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                        <strong>{{ $message }}</strong>
+                </div>
+                @endif
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('register') }}" accept-charset="UTF-8" enctype="multipart/form-data" >
                         @csrf
+                        
+                        <div class="row mb-3" style="margin-left: 20%">
+                            <input id="image" name="image" placeholder="Choose image"  type="file" accept="image/*"  onchange="showMyImage(this)" required />
+                            <br/>
+                           <img id="thumbnil" style="width:20%; margin-top:10px;visibility:hidden;"  src="" alt="image"  />
+                        </div>
 
                         <div class="row mb-3">
                             <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
@@ -74,10 +85,12 @@
                             <span class="text-danger error-text term_error" style="font-size: 13px;margin-left: 20px;" id="erspan6">Please Checkbox Click!</span>
                         </div>
                         @enderror
+                        
+
                         <div class="form-group{{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
                             <div class="col-md-12 mb-4" style="margin-left:20%">
-                                {{-- {!! app('captcha')->display() !!} --}}
-                                {!! NoCaptcha::renderJs() !!}
+                                {{-- {!! app('captcha')->display() !!}  --}}
+                               {!! NoCaptcha::renderJs() !!}
                                 {!! htmlFormSnippet() !!} 
                                 @if ($errors->has('g-recaptcha-response'))
                                 <span class="help-block text-danger">
@@ -109,5 +122,26 @@
              alert("df");
             //$('#addModal').modal('show');
         });
+
+        function showMyImage(fileInput) {
+        var files = fileInput.files;
+        for (var i = 0; i < files.length; i++) {           
+            var file = files[i];
+            var imageType = /image.*/;     
+            if (!file.type.match(imageType)) {
+                continue;
+            }           
+            var img=document.getElementById("thumbnil");  
+            img.style.visibility="visible";  
+            img.file = file;    
+            var reader = new FileReader();
+            reader.onload = (function(aImg) { 
+                return function(e) { 
+                    aImg.src = e.target.result; 
+                }; 
+            })(img);
+            reader.readAsDataURL(file);
+        }    
+    }
 </script>
 @endsection
