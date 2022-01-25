@@ -91,16 +91,7 @@ class RegisterController extends Controller
         /* Store $imageName name in DATABASE from HERE */
     //dd('a');
 
-    $useroll = UserRoll::all();
-    foreach($useroll as $rollid) {
-        UserRollInfo::create([
-            "user_id" =>$userid+1,
-            "uuid" => $userid+1,      
-            'roll_id' => $rollid['roll_id'],
-            'created_at' => now(), // this could be in model events / observers
-            'remarks' => 'testing123'
-        ]);
-    }
+    
     //$created = Unit::insert($units);
 
      User::create([
@@ -109,12 +100,27 @@ class RegisterController extends Controller
                 'password' => Hash::make($request->password),
                 'image'=>$imgid
             ]);
-        $request->image->move(public_path('user_profiles'),$imgid);
+       
+        $userid = DB::table('users')
+                    ->where('email', '=',$request->email) ->get();
+    // dd($userid[0]->id);
 
+        $useroll = UserRoll::all();
+        foreach($useroll as $rollid) {
+            UserRollInfo::create([
+                "user_id" =>$userid[0]->id, 
+                'roll_id' => $rollid['roll_id'],
+                'created_at' => now(), // this could be in model events / observers
+                'remark' => 'testing123'
+            ]);
+        }
        
 
+    $request->image->move(public_path('user_profiles'),$imgid);
 
-        return view('home');
+    $name = $userid[0]->name;
+    $image = $userid[0]->image;
+        return view('layouts.reg_index',compact('name','image'));
             
             
     }

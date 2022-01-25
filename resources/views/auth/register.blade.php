@@ -90,8 +90,8 @@
                         <div class="form-group{{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
                             <div class="col-md-12 mb-4" style="margin-left:20%">
                                 {{-- {!! app('captcha')->display() !!}  --}}
-                               {!! NoCaptcha::renderJs() !!}
-                                {!! htmlFormSnippet() !!} 
+                               {{-- {!! NoCaptcha::renderJs() !!}
+                                {!! htmlFormSnippet() !!}  --}}
                                 @if ($errors->has('g-recaptcha-response'))
                                 <span class="help-block text-danger">
                                     <strong>{{ $errors->first('g-recaptcha-response') }}</strong>

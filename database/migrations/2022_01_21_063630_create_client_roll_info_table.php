@@ -15,10 +15,9 @@ class CreateClientRollInfoTable extends Migration
     {
         Schema::create('client_roll_info', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id',36);            
-            $table->string('uuid',36);
+            $table->string('user_id',36);
             $table->string('roll_id',3);
-            $table->string('remarks')->nullable();
+            $table->string('remark')->nullable();
             $table->timestamps();
         });
     }
