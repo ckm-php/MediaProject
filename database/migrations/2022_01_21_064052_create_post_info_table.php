@@ -16,6 +16,7 @@ class CreatePostInfoTable extends Migration
         Schema::create('post_info', function (Blueprint $table) {
             $table->id();
             $table->string('user_id',36);
+            //$table->uuid('post_id');
             $table->string('post_id',36);
             $table->string('post_manage_id',36);
             $table->string('post_title');
@@ -23,7 +24,7 @@ class CreatePostInfoTable extends Migration
             $table->string('post_imge');            
             $table->string('post_status')->nullable();
             $table->string('post_date');
-            $table->string('remarks')->nullable();
+            $table->string('remark')->nullable();
             $table->timestamps();
         });
     }

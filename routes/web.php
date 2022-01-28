@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AdminAuthController as AdminAuth;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Web\PostInfoController as PostInfo;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,16 @@ Auth::routes();
 // });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('/userpost',[PostInfo::class,'postView'])->name('client.list');
+
+//create post
+Route::get('/userpost/create',[PostInfo::class,'postCreate'])->name('client.create');
+Route::post('/userpost/Add',[PostInfo::class,'postAdd'])->name('client.postAdd');
+
+//view post
+Route::get('userpost/edit/{postinfo}',[PostInfo::class,'postEdit'])->name('client.view');
+Route::get('userpost/destory/{postinfo}',[PostInfo::class,'postDelete'])->name('client.delete');
 
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
